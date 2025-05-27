@@ -1,10 +1,14 @@
 <?php
-$segments = explode('/', trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/'));
-if (isset($segments[3])) {
+$basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+$requestPath = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+$relativePath = '/' . ltrim(substr($requestPath, strlen($basePath)), '/');
+$segments = explode('/', trim($relativePath, '/'));
+
+if (isset($segments[1])) {
     $title = '';
 
-    if (isset($segments[4])) {
-        switch ($segments[3]) {
+    if (isset($segments[2])) {
+        switch ($segments[1]) {
             case 'perkara_kecamatan_list':
                 require_once 'helpers.php';
                 require_once 'perkara_kecamatan_helpers.php';
@@ -14,19 +18,19 @@ if (isset($segments[3])) {
                     $result[$key] = $name;
                 }
 
-                $title = 'Daftar Penerimaan Perkara' . (isset($result[$segments[4]]) ? (' Kecamatan ' . $result[$segments[4]]) : ($segments[4] == 'kec_luar' ? (' Luar ' . $kabupaten) : ''));
+                $title = 'Daftar Penerimaan Perkara' . (isset($result[$segments[2]]) ? (' Kecamatan ' . $result[$segments[2]]) : ($segments[2] == 'kec_luar' ? (' Luar ' . $kabupaten) : ''));
 
-                if ($segments[7]) {
-                    $title .= $segments[7] == 1 ? ' e-Court' : ' Tidak e-Court';
+                if ($segments[5]) {
+                    $title .= $segments[5] == 1 ? ' e-Court' : ' Tidak e-Court';
                 }
 
-                if ($segments[6]) {
-                    $month = $segments[6];
+                if ($segments[4]) {
+                    $month = $segments[4];
                     $title .= " Bulan " . get_month($month);
                 }
-                if ($segments[5]) {
-                    $year = $segments[5];
-                    $title .= (!$segments[6] ? ' Tahun' : '') . " {$year}";
+                if ($segments[3]) {
+                    $year = $segments[3];
+                    $title .= (!$segments[4] ? ' Tahun' : '') . " {$year}";
                 }
 
                 break;
@@ -34,13 +38,13 @@ if (isset($segments[3])) {
         }
     }
 
-    // extract([
-    //     'title' => 'Daftar Perkara',
-    // ]);
+    extract([
+        'segments' => $segments,
+    ]);
 
     ob_start();
 
-    include $segments[3] . '.php';
+    include $segments[1] . '.php';
 
     $viewContent = ob_get_clean();
 
