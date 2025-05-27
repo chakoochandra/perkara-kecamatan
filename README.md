@@ -14,6 +14,8 @@ Aplikasi ini dirancang untuk memantau dan merekap jumlah penerimaan perkara seca
 
 ✨ Filter jenis perkara
 
+✨ Ekspor tabel ke dalam bentuk excel, pdf, csv, dan lain-lain 
+
 ✨ Popup daftar perkara untuk detail informasi
 
 ✨ Visualisasi data dengan bar chart, pie chart, dan doughnut chart
